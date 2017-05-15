@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Library Management System</title>
+    {% include 'bootstrap.html' %}
+    <script type="text/javascript" src="../static/libm/js/1029.js"></script>
+    <link rel="stylesheet" href="../static/libm/css/style.css">
+
+  </head>
+  <body style="padding-top:50px;" background="static/libm/css/images/book-backgrndd.jpg">
+    <div class="container index" >
+        <div class="header">
+            <img src="static/libm/css/images/eteral.png" alt="eteral" />
+        </div>
+     <h2 style="color:white;margin-left:-15px;"> Welcome to Library Management System !!! </h2>
+     <h5 style="color:white;margin-left:-15px;"> Designed and manged for student and teachers  </h5>
+     <div class="row" style="background-color:white;width:70%;border:10px solid #B2B3B4;">
+      <h2 style="margin-left:5px;"> Student Login </h2>
+      <form class="col-md-8" action="/stlogin" role="form">
+       <div class="form-group">
+         <label for="roll no">University Roll Number:</label>
+         <input type="username" class="form-control" name="unroll"  placeholder="University Roll No">
+      </div>
+       <div class="form-group ">
+        <label for="name">Password:</label>
+        <input type="password" class="form-control" name="pass" placeholder="Password">
+       </div>
+       <button type="submit" class="btn btn-default" >Submit</button>
+       <a href="/stSignUp" >Student Sign Up</a>
+      </form>
+     </div> 
+    </div> 
+  </body>
+</html>

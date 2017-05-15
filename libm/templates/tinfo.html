@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Library Management System</title>
+    {% include 'bootstrap.html' %}
+    <script type="text/javascript" src="../static/libm/js/global.js"></script>
+    <link rel="stylesheet" href="../static/libm/css/style.css">
+
+  </head>
+
+  <body>
+     <nav id="menu" style="background-color:white;" class="navbar navbar-default navbar-fixed-top">
+     <div class="container-fluid">
+       <div class="navbar-header">
+         {% if tuser %}
+           <h3>Welcome to Library Management System, {{t_name}} </h3>
+           <a href="/logout" class="navbar-brand">Logout</a>
+         {%endif%}
+        </div>
+       <!--ul class="nav navbar-nav pull-right">
+         <li><a href="/available_books">Available Boooks</a></li>
+         <li><a href="/issued_books">Issued Boooks</a></li>
+         <li><a href="/student_record">Students Record</a></li>
+        </ul-->
+        </div>
+      </nav>
+    <div class="container" >
+     <div class="row">
+       <div id="status"></div>
+       <h2>Student Record</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Teacher Name</th>
+              <th>Employee ID</th>
+              <th>Teacher Department</th>
+              <th>No of Books Issued</th>
+              <th>Fine</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in tinfo %}
+             <tr>
+              <td>{{e.t_name}}</td>
+              <td>{{e.eid}}</td>
+              <td>{{e.teacher_department}}</td>
+              <td>{{e.no_of_books_issued}}</td>
+              <td>{{e.fine}}</td>
+             </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+     </div> 
+    </div> 
+   </body>
+ </html>

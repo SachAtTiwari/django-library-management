@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Lbrary Management System</title>
+    {% include 'bootstrap.html' %}
+    <script type="text/javascript" src="../static/libm/js/global.js"></script>
+    <link rel="stylesheet" href="../static/libm/css/style.css">
+
+  </head>
+
+  <body>
+     <nav id="menu" style="background-color:white;" class="navbar navbar-default navbar-fixed-top">
+     <div class="container-fluid">
+       <div class="navbar-header">
+         {% if user %}
+           <h3>Welcome to Library Management System, {{user}} </h3>
+           <a href="/logout" class="navbar-brand">Logout</a>
+         {%endif%}
+        </div>
+       <ul class="nav navbar-nav pull-right">
+         <li><a href="/available_books">Available Boooks</a></li>
+         <li><a href="/issued_books">Issued Boooks</a></li>
+         <li><a href="/student_record">Students Record</a></li>
+         <li><a href="/teacher_record">Teacher Record</a></li>
+        </ul>
+        </div>
+      </nav>
+    <div class="container" >
+     <div class="row">
+       <div id="status"></div>
+       <h2>Student Record</h2>
+        <table id="st_record" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>University Roll No</th>
+              <th>Student Department</th>
+              <th>No of Books Issued</th>
+              <th>Fine</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in addStudent %}
+             <tr>
+              <td>{{e.student_name}}</td>
+              <td>{{e.university_roll_no}}</td>
+              <td>{{e.student_department}}</td>
+              <td>{{e.no_of_books_issued}}</td>
+              <td>Rs. {{e.fine}}</td>
+             </tr>
+            {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        <form class="form-inline" action="#" role="form">{% csrf_token %}
+         <div class="form-group">
+           <input type="text" class="form-control" id="stName" placeholder="Student Name">
+          </div>
+          <div class="form-group strecord">
+            <input type="text" class="form-control" id="uno" placeholder="University Roll No">
+         </div>
+          <div class="form-group strecord">
+            <input type="text" class="form-control" id="dpt" placeholder="Department">
+         </div>
+          <!--div class="form-group strecord">
+            <input type="text" class="form-control" id="noiss" placeholder="Issued Books">
+         </div-->
+          <button type="submit" class="btn btn-success" id="addStudent">Add Student</button>
+         </form>
+     </div> 
+    </div> 
+   </body>
+ </html>

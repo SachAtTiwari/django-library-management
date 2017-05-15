@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Lbrary Management System</title>
+    {% include 'bootstrap.html' %}
+    <script type="text/javascript" src="../static/libm/js/global.js"></script>
+    <link rel="stylesheet" href="../static/libm/css/style.css">
+
+  </head>
+
+  <body>
+     <nav id="menu" style="background-color:white;" class="navbar navbar-default navbar-fixed-top">
+     <div class="container-fluid">
+       <div class="navbar-header">
+         {% if user %}
+           <h3>Welcome to Library Management System, {{user}} </h3>
+           <a href="/logout" class="navbar-brand">Logout</a>
+         {%endif%}
+        </div>
+       <ul class="nav navbar-nav pull-right">
+         <li><a href="/available_books">Available Boooks</a></li>
+         <li><a href="/issued_books">Issued Boooks</a></li>
+         <li><a href="/student_record">Students Record</a></li>
+         <li><a href="/teacher_record">Teacher Record</a></li>
+        </ul>
+        </div>
+      </nav>
+    <div class="container" >
+     <div class="row">
+       <div id="status"></div>
+       <h2>Issued Books</h2>
+        <table id="is_books" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Book Name</th>
+              <th>Assigned To</th>
+              <th>Roll Number or Employee ID</th>
+              <th>Issued Date</th>
+              <th>Expiry Date</th>
+              <th>Submission Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in issbooks %}
+             <tr>
+              <td>{{e.book_name}}</td>
+              <td>{{e.assignedTo}}</td>
+              <td>{{e.roll_no}}</td>
+              <td>{{e.lendPeriod_from}}</td>
+              <td>{{e.lendPeriod_to}}</td>
+              <td><input style="margin-left:40%;" type="checkbox" /></td>
+                 <!--form action='/updateSubmission' id='form' method='get'>{%csrf_token%} 
+                    <input style="margin-left:40%;" type="checkbox" name='{{e.book_name}}' value='{{e.book_name}}' onchange="$('#form').submit();"/></td>
+                 </form-->
+             </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <form class="form-inline" action="#" role="form">{% csrf_token %}
+         <div class="form-group isbooks">
+           <input type="text" class="form-control" id="book_name" placeholder="Book Name">
+          </div>
+          <div class="form-group isbooks">
+            <input type="text" class="form-control" id="stName" placeholder="Student or Teacher Name">
+         </div>
+          <div class="form-group isbooks">
+            <input type="text" class="form-control" id="rnu" placeholder="Roll Number or Employee ID">
+         </div>
+          <div class="form-group isbooks">
+            <input type="text" class="form-control" id="isdate" placeholder="Issued Date">
+         </div>
+          <div class="form-group isbooks">
+            <input type="text" class="form-control" id="to" placeholder="To">
+         </div>
+          <button type="submit" class="btn btn-success  pull-right" id="issueBooks">Issue Book</button>
+         </form>
+     </div> 
+    </div> 
+   </body>
+ </html>
