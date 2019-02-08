@@ -1,5 +1,4 @@
 $(document).ready(function(){
-   console.log("in docu");
    $("#Addbooks").on('click', AddBooks);
    $("#issueBooks").on('click', IssuedBooks);
    $('#addStudent').on('click', studentRecord );
@@ -18,7 +17,6 @@ $(document).ready(function(){
       ajaxOptions : {
            beforeSend: function(xhr, settings) {                                        
               if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                  //console.log("in before send ",settings);
                   xhr.setRequestHeader("X-CSRFToken", csrftoken);
               }
             },
@@ -27,7 +25,6 @@ $(document).ready(function(){
            url:'/updateBook',
            //data: {book_name:$(this).editable('getValue')},
            success: function( data ) {
-		console.log("data is",data);
            }                                                                            
       }
 
@@ -45,8 +42,9 @@ $(document).ready(function(){
             var uid = currentRow.getElementsByTagName("td")[2];
         
             //alert("My text is: " + secondColumn.textContent );
-            console.log("data is in uid bookname", book_name.textContent, uid.textContent);
-            updateSubmission(book_name.textContent,uid.textContent);
+            if (book_name.textContent && uid.textContent) {
+	            updateSubmission(book_name.textContent,uid.textContent);
+	    }
 
           } 
    };
@@ -90,11 +88,9 @@ function sameOrigin(url) {
 }
 
 function updateSubmission(book_name, uid){
-      //console.log("in update submission");
       $.ajax({                                                                                   
         beforeSend: function(xhr, settings) {                                        
            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-               //console.log("in before send ",settings);
                xhr.setRequestHeader("X-CSRFToken", csrftoken);
            }
          },
@@ -103,10 +99,8 @@ function updateSubmission(book_name, uid){
          dataType: 'json',
          data: {book_name:book_name, uid:uid},
          success: function( data ) {
-          //console.log("data is", data);
           if (data.success === 0){
              window.location.reload();
-             //console.log("updated book entry");
              var divToappend = '<div class="alert alert-success">' +
                   ' <a href="#" class="close" data-dismiss="alert"' + 
                   ' aria-label="close">&times;</a>' +
@@ -131,11 +125,9 @@ function updateSubmission(book_name, uid){
 
 function AddBooks(event){
    event.preventDefault();
-   //console.log("in add books 2 1");
    var book_name = $("#book_name").val();
    var authName = $("#authName").val();
    var dpt = $("#dpt").val();
-   //console.log("data in client",book_name,authName,dpt);
    if ( !book_name || !authName || !dpt ){
       var divToappend = '<div class="alert alert-danger">' +
              ' <a href="#" class="close" data-dismiss="alert"' + 
@@ -147,7 +139,6 @@ function AddBooks(event){
        $.ajax({
          beforeSend: function(xhr, settings) {                                        
             if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                //console.log("in before send ",settings);
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
        },
@@ -156,7 +147,6 @@ function AddBooks(event){
        dataType: 'json',
        data: {book_name:book_name, authname:authName, dpt:dpt},
        success: function( data ) {
-        //console.log("data is", data);
         if (data.success === 0){
            window.location.reload();
         }
@@ -177,7 +167,6 @@ function AddBooks(event){
 
 function IssuedBooks(event){
     event.preventDefault();
-    //console.log("in issued books ");
     var book_name = $("#book_name").val();
     var stName = $("#stName").val();
     var roll_no = $("#rnu").val();
@@ -194,7 +183,6 @@ function IssuedBooks(event){
       $.ajax({
         beforeSend: function(xhr, settings) {                                        
             if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                //console.log("in before send ",settings);
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
@@ -203,9 +191,7 @@ function IssuedBooks(event){
         dataType: 'json',
         data: {book_name:book_name, stname:stName, roll_no:roll_no, from:from, to:to},
         success: function(data) {
-          //console.log("data is", data);
           if (data.success === 0){
-            //console.log("reloading....");
             window.location.reload();
           }else{
              var divToappend = '<div class="alert alert-danger">' +
@@ -224,12 +210,10 @@ function IssuedBooks(event){
 
 function studentRecord(event){
     event.preventDefault();
-    //console.log("in add student")
     var stuname = $("#stName").val();
     var uno = $("#uno").val();
     var dpt = $("#dpt").val();
     //var noOfIssBook = $("#noiss").val();
-    //console.log("in stu record", stuname, uno, dpt)
     if ( !stuname || !uno || !dpt ){
        var divToappend = '<div class="alert alert-danger">' +
               ' <a href="#" class="close" data-dismiss="alert"' + 
@@ -241,7 +225,6 @@ function studentRecord(event){
       $.ajax({
         beforeSend: function(xhr, settings) {                                        
             if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                //console.log("in before send ",settings);
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },

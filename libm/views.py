@@ -22,9 +22,9 @@ from django.contrib import messages
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def home(request):
      try:
-         return render_to_response('index.html', context_instance=RequestContext(request) )
+         return render(request, 'index.html')
      except KeyError:
-         return render_to_response('index.html', context_instance=RequestContext(request))
+         return render(request, 'index.html')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tsignup(request):
@@ -36,14 +36,12 @@ def tsignup(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def Tsignup(request):
     try:
-       print "In tsignup ", request.method
+       #print "In tsignup ", request.method
        username = request.GET.get('tName')
-       print "username", username
        eid = request.GET.get('eid')
        passwd = request.GET.get('pass')
        passwd_conf = request.GET.get('pass_confirm')
 
-       print "password", passwd
        if username and passwd and passwd_conf and eid:
           print "passwordi inside", passwd
           sign_up_auth = TeacherInfo.objects.filter(t_name=username).filter(eid=eid)
@@ -80,21 +78,18 @@ def stSignUp(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signup(request):
     try:
-       print "In signup ", request.method
+       #print "In signup ", request.method
        username = request.GET.get('stName')
-       print "username", username
+       #print "username", username
        unroll = request.GET.get('unroll')
        passwd = request.GET.get('pass')
        passwd_conf = request.GET.get('pass_confirm')
 
-       print "password", passwd
        if username and passwd and passwd_conf and unroll:
-          print "passwordi inside", passwd
           sign_up_auth = StudentInfo.objects.filter(student_name=username).filter(university_roll_no=unroll)
           if sign_up_auth:
-              print sign_up_auth
               signup_res = SignUpSt.objects.filter(student_name=username).filter(password=passwd)
-              print "login_res", signup_res
+              #print "login_res", signup_res
               if not signup_res:
                   signup = SignUpSt()
                   signup.university_roll_no = unroll
@@ -115,15 +110,14 @@ def signup(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def studentLogin(request):
     try:
-       print "In st login ", request.GET
+       #print "In st login ", request.GET
        unroll = request.GET.get('unroll')
-       print "username", unroll
+       #print "username", unroll
        paswd = request.GET.get('pass')
-       print "password", paswd
        if unroll and paswd:
-          print "passwordi inside", paswd
+          #print "passwordi inside", paswd
           login_res = SignUpSt.objects.filter(university_roll_no=unroll).filter(password=paswd)
-          print "login_res", login_res
+          #print "login_res", login_res
           if login_res:
               request.session['stuser'] = unroll
               return redirect("/stInfo")
@@ -138,15 +132,12 @@ def studentLogin(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def TLogin(request):
     try:
-       print "In t login ", request.GET
+       #print "In t login ", request.GET
        eid = request.GET.get('eid')
-       print "username", eid
+       #print "username", eid
        paswd = request.GET.get('pass')
-       print "password", paswd
        if eid and paswd:
-          print "passwordi inside", paswd
           login_res = SignUpT.objects.filter(eid=eid).filter(password=paswd)
-          print "login_res", login_res
           if login_res:
               request.session['tuser'] = eid
               return redirect("/tInfo")
@@ -163,19 +154,17 @@ def stInfo(request):
     try:
        stuser = request.session["stuser"]
        if stuser:
-          print "user is", stuser
+          #print "user is", stuser
           addStudent = StudentInfo.objects.filter(university_roll_no=stuser) 
-          print addStudent
           stuname = ""
           for i in addStudent:
              stuname = i.student_name
           updateFine = StudentInfo.objects.all()
           for fi in updateFine:
              fine_charged = calculate_fine(fi.university_roll_no)
-             print "in stinfo", fine_charged
              fi.update(fine=fine_charged)
              #updateFine.save(force_update=True)
-          return render_to_response('stinfo.html', {'addStudent':addStudent, 'stuser':stuser, 'stuname':stuname})
+          return render(request, 'stinfo.html', {'addStudent':addStudent, 'stuser':stuser, 'stuname':stuname})
        else:
            return redirect("/stLogin")
            #return render_to_response('stinfo.html' )
@@ -187,19 +176,19 @@ def TInfo(request):
     try:
        tuser = request.session["tuser"]
        if tuser:
-          print "user is", tuser
+          #print "user is", tuser
           tinfo = TeacherInfo.objects.filter(eid=tuser) 
-          print tinfo
+          #print tinfo
           tname = ""
           for i in tinfo:
              t_name = i.t_name
           updateFine = TeacherInfo.objects.filter(eid=tuser)
           for fi in updateFine:
              fine_charged = calculate_fine(fi.eid)
-             print "in tinfo", fine_charged
+             #print "in tinfo", fine_charged
              fi.update(fine=fine_charged)
              #updateFine.save(force_update=True)
-          return render_to_response('tinfo.html', {'tinfo':updateFine, 'tuser':tuser, 't_name':t_name})
+          return render(request, 'tinfo.html', {'tinfo':updateFine, 'tuser':tuser, 't_name':t_name})
        else:
            return redirect("/tlogin")
            #return render_to_response('stinfo.html' )
@@ -229,7 +218,7 @@ def avbooks(request):
            #print "user is", user
            avbooks = AvailableBook.objects.all() 
            #print avbooks
-           return render_to_response('lib.html',{'avbooks':avbooks, 'user':user})
+           return render(request, 'lib.html', {'avbooks':avbooks, 'user':user})
         else:
            return redirect("/")
      except KeyError:
@@ -244,7 +233,7 @@ def issBooks(request):
            #print "user is", user
            issbooks = IssuedBook.objects.all() 
            #print issbooks
-           return render_to_response('issbooks.html', {'issbooks': issbooks, 'user':user})
+           return render(request, 'issbooks.html', {'issbooks': issbooks, 'user':user})
         else:
            return redirect("/")
      except KeyError:
@@ -262,7 +251,7 @@ def studentRecord(request):
              fi.update(fine=fine_charged)
              #fi.fine = fine_charged
              #fi.save(force_update=True)
-          return render_to_response('stRecord.html', {'addStudent':updateFine, 'user':user})
+          return render(request, 'stRecord.html', {'addStudent':updateFine, 'user':user})
         else:
            return redirect("/")
      except KeyError:
@@ -280,7 +269,7 @@ def teacherRecord(request):
              fi.update(fine=fine_charged)
              #fi.fine = fine_charged
              #fi.save(force_update=True)
-          return render_to_response('trecord.html', {'tInfo':updateFine, 'user':user})
+          return render(request, 'trecord.html', {'tInfo':updateFine, 'user':user})
         else:
            return redirect("/")
      except KeyError:
@@ -319,24 +308,24 @@ def check_student_record(roll_no):
 def check_teacher_record(roll_no):
     find_teacher = TeacherInfo.objects.filter(eid=roll_no)
     if not find_teacher:
-       print "Teacher is not present in records, first add Teacher"
+       #print "Teacher is not present in records, first add Teacher"
        return 1
     else:
-       print "issue ok"
+       #print "issue ok"
        return 0
       
 def check_book_availability(bookname):
      find_book = AvailableBook.objects.filter(book_name=bookname) 
      if not find_book:
-        print "Book is not available"
+        #print "Book is not available"
         return 1
      else:
         check_avail = IssuedBook.objects.filter(book_name=bookname)
         if not check_avail:
-           print "issue book"
+           #print "issue book"
            return 0
         else:
-           print "Book is issued to someone else"
+           #print "Book is issued to someone else"
            return 1
 
 def update_book_submission_count(uid):
@@ -345,7 +334,7 @@ def update_book_submission_count(uid):
        updateBookCount = TeacherInfo.objects.filter(eid=uid)
                                                                              
     for i in updateBookCount:
-        print i.no_of_books_issued 
+        #print i.no_of_books_issued 
         if i.no_of_books_issued == 2:
             i.no_of_books_issued -= 1
             i.save()
@@ -357,13 +346,13 @@ def update_book_submission_count(uid):
 def update_book_submission(request):
     try:
        status = {}
-       print "request is", request.POST
+       #print "request is", request.POST
        if request.method == 'POST':
           bookname = request.POST.get('book_name')
           uid = request.POST.get('uid')
-          print "bookname", bookname, uid
+          #print "bookname", bookname, uid
           update_submission = IssuedBook.objects.filter(book_name=bookname) 
-          print "update submission", update_submission
+          #print "update submission", update_submission
           if update_submission:
              update_book_submission_count(uid)
              update_submission.delete()
@@ -392,7 +381,7 @@ def issuedBooks(request):
           issbook.lendPeriod_to = to
           bstatus = check_book_availability(bookname)
           if bstatus == 1:
-             print "book not available"
+             #print "book not available"
              status['success'] = 1
           elif bstatus == 0:
              stStatus = check_student_record(roll_no)
@@ -405,7 +394,7 @@ def issuedBooks(request):
                    status['success'] = 1
 
              elif stStatus == 1:
-                print "student not present in records"
+                #print "student not present in records"
                 tStatus = check_teacher_record(roll_no)
                 if tStatus == 0:
                    st = update_issue_book_count(roll_no)
@@ -428,12 +417,12 @@ def update_issue_book_count(roll_no):
        updateBookCount = TeacherInfo.objects.filter(eid=roll_no)
 
     for i in updateBookCount:
-        print i.no_of_books_issued 
+        #print i.no_of_books_issued 
         if i.no_of_books_issued == 2:
-            print "books can not be issued"
+            #print "books can not be issued"
             return 1
         elif i.no_of_books_issued < 2 and i.no_of_books_issued >= 0:
-            print "books can be issued"
+            #print "books can be issued"
             i.no_of_books_issued += 1
             i.save()
             return 0
@@ -473,7 +462,7 @@ def addStudent(request):
              addStudent.student_department = dpt
              addStudent.no_of_books_issued = 0 
              fine_charged = calculate_fine(uno)
-             print "fine charged", fine_charged
+             #print "fine charged", fine_charged
              addStudent.fine = fine_charged 
              addStudent.save()
              status['success'] = 0
@@ -491,7 +480,7 @@ def addStudent(request):
 
 def updateBook(request):
      try:
-        print "In update Student ", request.POST
+        #print "In update Student ", request.POST
         return HttpResponse(json.dumps({'status':1}))
      except KeyError:
         pass
@@ -505,7 +494,7 @@ def addTeacher(request):
           eid = request.POST.get('eid')
           tdpt = request.POST.get('tdpt')
           #issbooks = request.POST.get('issbooks')
-          print "info is", tname, eid, tdpt
+          #print "info is", tname, eid, tdpt
           addteach = TeacherInfo.objects.filter(eid=eid) 
           if not addteach:
              addt = TeacherInfo() 
@@ -514,7 +503,7 @@ def addTeacher(request):
              addt.teacher_department = tdpt
              addt.no_of_books_issued = 0 
              fine_charged = calculate_fine(eid)
-             print "fine charged", fine_charged
+             #print "fine charged", fine_charged
              addt.fine = fine_charged 
              addt.save()
              status['success'] = 0
@@ -525,7 +514,7 @@ def addTeacher(request):
                  status['success'] = 0
              if st == 1:
                  status['success'] = 1
-        print "sending response",json.dumps(status)
+        #print "sending response",json.dumps(status)
         return HttpResponse(json.dumps(status))
      except KeyError:
         pass
